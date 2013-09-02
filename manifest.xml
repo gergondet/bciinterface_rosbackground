@@ -1,0 +1,16 @@
+<package>
+  <description brief="bciinterface_rosbackground">
+
+     bciinterface_rosbackground
+
+  </description>
+  <author>Pierre Gergondet</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/bciinterface_rosbackground</url>
+  <depend package="image_transport"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
