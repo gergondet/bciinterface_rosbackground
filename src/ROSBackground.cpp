@@ -1,4 +1,4 @@
-#include "ROSBackground.h"
+#include <bciinterface_rosbackground/ROSBackground.h>
 
 #include <bci-interface/Background/BufferBG.h>
 
@@ -20,6 +20,12 @@ struct ROSBackgroundImpl
         sub = it.subscribe(videonode, 1, &ROSBackgroundImpl::imageCallback, this);
     }
 
+    ROSBackgroundImpl(ros::NodeHandle & nh, const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0)
+    : nh(nh), it(nh), bg(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
+    {
+        sub = it.subscribe(videonode, 1, &ROSBackgroundImpl::imageCallback, this);
+    }
+
     ~ROSBackgroundImpl()
     {
         delete bg;
@@ -32,6 +38,14 @@ struct ROSBackgroundImpl
             bg = new BufferBG(img->width, img->height, wwidth, wheight, iwidth, iheight);
         }
         bg->UpdateFromBuffer_BGR8(const_cast<unsigned char *>(&(img->data[0])));
+    }
+
+    void SetSubRect(int left, int top, int width, int height)
+    {
+        if(bg)
+        {
+            bg->SetSubRect(left,top, width, height);
+        }
     }
 
     ros::NodeHandle nh;
@@ -53,6 +67,11 @@ ROSBackground::ROSBackground(const std::string & videonode, unsigned int wwidth,
     char * argv[] = {};
     ros::init(argc, argv, "bci_interface_rosbg");
     m_impl = new ROSBackgroundImpl(videonode, wwidth, wheight, iwidth, iheight);
+}
+
+ROSBackground::ROSBackground(ros::NodeHandle & nh, const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth, unsigned int iheight)
+{
+    m_impl = new ROSBackgroundImpl(nh, videonode, wwidth, wheight, iwidth, iheight);
 }
 
 ROSBackground::~ROSBackground()
@@ -81,6 +100,11 @@ void ROSBackground::Draw(sf::RenderWindow * app)
     {
         m_impl->bg->Draw(app);
     }
+}
+
+void ROSBackground::SetSubRect(int left, int top, int width, int height)
+{
+    m_impl->SetSubRect(left, top, width, height);
 }
 
 } //namespace bciinterface

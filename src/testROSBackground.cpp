@@ -1,4 +1,4 @@
-#include "ROSBackground.h"
+#include <bciinterface_rosbackground/ROSBackground.h>
 
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>

@@ -16,6 +16,19 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+INCLUDE(FindPkgConfig)
+pkg_check_modules(BCIINTERFACE bci-interface)
+IF(BCIINTERFACE_FOUND)
+EXEC_PROGRAM(${PKG_CONFIG_EXECUTABLE} ARGS bci-interface --cflags
+  OUTPUT_VARIABLE BCIINTERFACE_CFLAGS)
+MESSAGE(STATUS "BCIINTERFACE_CFLAGS: ${BCIINTERFACE_CFLAGS}")
+EXEC_PROGRAM(${PKG_CONFIG_EXECUTABLE} ARGS bci-interface --libs
+  OUTPUT_VARIABLE BCIINTERFACE_LIBS)
+MESSAGE(STATUS "BCIINTERFACE_LIBS: ${BCIINTERFACE_LIBS}")
+ELSE(BCIINTERFACE_FOUND)
+MESSAGE(STATUS "bci-interface not found")
+ENDIF(BCIINTERFACE_FOUND)
+
 find_package( configparser )
 find_package( vision )
 find_package( visionsystem )
@@ -28,3 +41,6 @@ target_link_libraries(rosbackground bci-interface sfml-graphics sfml-window sfml
 rosbuild_add_executable(testROSBackground src/testROSBackground.cpp)
 target_link_libraries(testROSBackground rosbackground bci-interface)
 rosbuild_link_boost(testROSBackground filesystem system thread)
+
+install(TARGETS rosbackground DESTINATION ${BCIINTERFACE_LIBRARY_DIRS})
+install(FILES include/bciinterface_rosbackground/ROSBackground.h DESTINATION ${BCIINTERFACE_INCLUDE_DIRS}/bci-interface/Background)
