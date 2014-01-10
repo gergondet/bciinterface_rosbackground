@@ -33,7 +33,7 @@ public:
     virtual void Close();
 
     /* Returns the current sprite of background */
-    virtual void Draw(sf::RenderWindow * app);
+    virtual void Draw(sf::RenderTarget * app);
 
     /* "Zoom" */
     void SetSubRect(int left, int top, int width, int height);

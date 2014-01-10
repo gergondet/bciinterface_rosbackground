@@ -94,7 +94,7 @@ void ROSBackground::Close()
     m_impl->close = true;
 }
 
-void ROSBackground::Draw(sf::RenderWindow * app)
+void ROSBackground::Draw(sf::RenderTarget * app)
 {
     if(m_impl->bg)
     {
