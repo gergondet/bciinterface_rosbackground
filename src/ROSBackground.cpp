@@ -15,13 +15,13 @@ namespace bciinterface
 struct ROSBackgroundImpl
 {
     ROSBackgroundImpl(const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0)
-    : nh(), it(nh), bg(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
+    : nh(), it(nh), bg(0), width(0), height(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
     {
         sub = it.subscribe(videonode, 1, &ROSBackgroundImpl::imageCallback, this);
     }
 
     ROSBackgroundImpl(ros::NodeHandle & nh, const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0)
-    : nh(nh), it(nh), bg(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
+    : nh(nh), it(nh), bg(0), width(0), height(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
     {
         sub = it.subscribe(videonode, 1, &ROSBackgroundImpl::imageCallback, this);
     }
@@ -31,13 +31,30 @@ struct ROSBackgroundImpl
         delete bg;
     }
 
+    bool init()
+    {
+        if(bg)
+        {
+            return true;
+        }
+        if(width != 0 && height != 0)
+        {
+            bg = new BufferBG(width, height, wwidth, wheight, iwidth, iheight);
+            return true;
+        }
+        return false;
+    }
+
     void imageCallback(const sensor_msgs::ImageConstPtr & img)
     {
         if(!bg)
         {
-            bg = new BufferBG(img->width, img->height, wwidth, wheight, iwidth, iheight);
+            width = img->width; height = img->height;
         }
-        bg->UpdateFromBuffer_BGR8(const_cast<unsigned char *>(&(img->data[0])));
+        else
+        {
+            bg->UpdateFromBuffer_BGR8(const_cast<unsigned char *>(&(img->data[0])));
+        }
     }
 
     void SetSubRect(int left, int top, int width, int height)
@@ -54,6 +71,8 @@ struct ROSBackgroundImpl
 
     BufferBG * bg;
     unsigned char * buffer;
+    unsigned int width;
+    unsigned int height;
     unsigned int wwidth;
     unsigned int wheight;
     unsigned iwidth;
@@ -99,6 +118,13 @@ void ROSBackground::Draw(sf::RenderTarget * app)
     if(m_impl->bg)
     {
         m_impl->bg->Draw(app);
+    }
+    else
+    {
+        if(m_impl->init())
+        {
+            m_impl->bg->Draw(app);
+        }
     }
 }
 
