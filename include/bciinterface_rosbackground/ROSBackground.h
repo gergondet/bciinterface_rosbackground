@@ -38,6 +38,9 @@ public:
     /* "Zoom" */
     void SetSubRect(int left, int top, int width, int height);
 
+    /* Change/Set camera topic */
+    void SetCameraTopic(const std::string & camera_topic);
+
     /* Overrider if you wish to implement Draw with OpenGL */
     virtual bool DrawWithGL() { return false; }
 private:

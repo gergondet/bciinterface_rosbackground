@@ -65,6 +65,12 @@ struct ROSBackgroundImpl
         }
     }
 
+    void SetCameraTopic(const std::string & videonode)
+    {
+        sub.shutdown();
+        sub = it.subscribe(videonode, 1, &ROSBackgroundImpl::imageCallback, this);
+    }
+
     ros::NodeHandle nh;
     image_transport::ImageTransport it;
     image_transport::Subscriber sub;
@@ -131,6 +137,11 @@ void ROSBackground::Draw(sf::RenderTarget * app)
 void ROSBackground::SetSubRect(int left, int top, int width, int height)
 {
     m_impl->SetSubRect(left, top, width, height);
+}
+
+void ROSBackground::SetCameraTopic(const std::string & camera_topic)
+{
+    m_impl->SetCameraTopic(camera_topic);
 }
 
 } //namespace bciinterface

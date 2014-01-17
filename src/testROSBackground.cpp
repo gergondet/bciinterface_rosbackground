@@ -5,6 +5,7 @@
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <bci-interface/CommandOverrider.h>
+#include <bci-interface/EventHandler.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -30,6 +31,32 @@ std::string dirname(char * path)
 #include <libgen.h>
 #endif
 
+struct TestCameraSwitch : public bciinterface::EventHandler
+{
+    TestCameraSwitch(bciinterface::ROSBackground & bg) : bg(bg), current_video_node("camera/rgb/image_color")
+    {
+    }
+
+    virtual void Process(sf::Event & event)
+    {
+        if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space )
+        {
+            if(current_video_node == "camera/rgb/image_color")
+            {
+                current_video_node = "vscore/image";
+            }
+            else
+            {
+                current_video_node = "camera/rgb/image_color";
+            }
+            bg.SetCameraTopic(current_video_node);
+        }
+    }
+
+    bciinterface::ROSBackground & bg;
+    std::string current_video_node;
+};
+
 using namespace bciinterface;
 
 int main(int argc, char * argv[])
@@ -54,35 +81,14 @@ int main(int argc, char * argv[])
     }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-//    UDPReceiver * receiver = new UDPReceiver(1111);
-//    SimpleInterpreter * interpreter = new SimpleInterpreter();
-//    bciinterface->SetCommandReceiver(receiver);
-//    bciinterface->SetCommandInterpreter(interpreter);
-
-//    CommandOverrider overrider;
-//    overrider.AddOverrideCommand(sf::Keyboard::Up, 1);
-//    overrider.AddOverrideCommand(sf::Keyboard::Right, 2);
-//    overrider.AddOverrideCommand(sf::Keyboard::Down, 3);
-//    overrider.AddOverrideCommand(sf::Keyboard::Left, 4);
-//    bciinterface->SetCommandOverrider(&overrider);
-
-//    ROSBackground * bg = new ROSBackground("vscore/image", width, height, iwidth, iheight); 
     ROSBackground * bg = new ROSBackground("camera/rgb/image_color", width, height, iwidth, iheight); 
+    TestCameraSwitch tcs(*bg);
     bciinterface->SetBackground(bg);
-
-    std::string dir = dirname(argv[0]);
-    dir += "/";
-    bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, dir + "UP.png", dir + "UP_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
+    bciinterface->AddEventHandler(&tcs);
 
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;
-//    delete interpreter;
-//    delete receiver;
     delete bg;
     
 
