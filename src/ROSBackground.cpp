@@ -53,7 +53,14 @@ struct ROSBackgroundImpl
         }
         else
         {
-            bg->UpdateFromBuffer_BGR8(const_cast<unsigned char *>(&(img->data[0])));
+            if(img->encoding == "bgr8")
+            {
+                bg->UpdateFromBuffer_BGR8(const_cast<unsigned char *>(&(img->data[0])));
+            }
+            else
+            {
+                bg->UpdateFromBuffer_RGB8(const_cast<unsigned char *>(&(img->data[0])));
+            }
         }
     }
 
