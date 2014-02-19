@@ -29,11 +29,8 @@ ELSE(BCIINTERFACE_FOUND)
 MESSAGE(STATUS "bci-interface not found")
 ENDIF(BCIINTERFACE_FOUND)
 
-find_package( configparser )
-find_package( vision )
-find_package( visionsystem )
-include_directories( ${VISIONSYSTEM_INCLUDE_DIRS} )
-link_directories( "${VISIONSYSTEM_LIBRARY_DIRS}")
+include_directories( ${BCIINTERFACE_INCLUDE_DIRS} )
+link_directories( ${BCIINTERFACE_LIBRARY_DIRS} )
 
 rosbuild_add_library(rosbackground src/ROSBackground.cpp)
 target_link_libraries(rosbackground bci-interface sfml-graphics sfml-window sfml-system)
