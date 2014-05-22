@@ -33,7 +33,7 @@ std::string dirname(char * path)
 
 struct TestCameraSwitch : public bciinterface::EventHandler
 {
-    TestCameraSwitch(bciinterface::ROSBackground & bg) : bg(bg), current_video_node("camera/rgb/image_color")
+    TestCameraSwitch(bciinterface::ROSBackground & bg) : bg(bg), current_video_node("camera/rgb/image_raw")
     {
     }
 
@@ -41,13 +41,13 @@ struct TestCameraSwitch : public bciinterface::EventHandler
     {
         if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space )
         {
-            if(current_video_node == "camera/rgb/image_color")
+            if(current_video_node == "camera/rgb/image_raw")
             {
                 current_video_node = "vscore/image";
             }
             else
             {
-                current_video_node = "camera/rgb/image_color";
+                current_video_node = "camera/rgb/image_raw";
             }
             bg.SetCameraTopic(current_video_node);
         }
@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
     }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-    ROSBackground * bg = new ROSBackground("camera/rgb/image_color", width, height, iwidth, iheight); 
+    ROSBackground * bg = new ROSBackground("camera/rgb/image_raw", width, height, iwidth, iheight);
     TestCameraSwitch tcs(*bg);
     bciinterface->SetBackground(bg);
     bciinterface->AddEventHandler(&tcs);
@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
 
     delete bciinterface;
     delete bg;
-    
+
 
     return 0;
 }

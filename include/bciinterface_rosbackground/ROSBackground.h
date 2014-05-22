@@ -3,6 +3,7 @@
 #include <string>
 
 #include <ros/ros.h>
+#include <ros_h264_streamer/h264_receiver.h>
 
 #ifndef _H_ROSBACKGROUND_H_
 #define _H_ROSBACKGROUND_H_
@@ -23,6 +24,10 @@ public:
     ROSBackground(const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
 
     ROSBackground(ros::NodeHandle & nh, const std::string & videonode, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
+
+    ROSBackground(ros_h264_streamer::H264Receiver::Config & conf, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
+
+    ROSBackground(ros::NodeHandle & nh, ros_h264_streamer::H264Receiver::Config & conf, unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
 
     virtual ~ROSBackground();
 
