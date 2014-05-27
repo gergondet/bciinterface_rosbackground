@@ -14,8 +14,13 @@ include_directories(${Boost_INCLUDE_DIRS})
 include(FindPkgConfig)
 
 pkg_check_modules(BCIINTERFACE bci-interface)
+if(${BCIINTERFACE_LIBRARY_DIRS})
 include_directories( ${BCIINTERFACE_INCLUDE_DIRS} )
 link_directories( ${BCIINTERFACE_LIBRARY_DIRS} )
+else()
+set(BCIINTERFACE_INCLUDE_DIRS /usr/include)
+set(BCIINTERFACE_LIBRARY_DIRS /usr/lib)
+endif()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
@@ -42,4 +47,4 @@ add_executable(testROSBackgroundNetwork test/testROSBackgroundNetwork.cpp)
 target_link_libraries(testROSBackgroundNetwork rosbackground ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 install(TARGETS rosbackground DESTINATION ${BCIINTERFACE_LIBRARY_DIRS})
-install(FILES include/bciinterface_rosbackground/ROSBackground.h DESTINATION ${BCIINTERFACE_INCLUDE_DIRS}/bci-interface/Background)
+install(FILES include/bci-interface/Background/ROSBackground.h DESTINATION ${BCIINTERFACE_INCLUDE_DIRS}/bci-interface/Background)

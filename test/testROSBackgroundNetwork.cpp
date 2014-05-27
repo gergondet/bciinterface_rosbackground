@@ -1,4 +1,4 @@
-#include <bciinterface_rosbackground/ROSBackground.h>
+#include "bci-interface/Background/ROSBackground.h"
 
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/EventHandler.h>

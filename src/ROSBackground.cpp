@@ -1,4 +1,4 @@
-#include <bciinterface_rosbackground/ROSBackground.h>
+#include "bci-interface/Background/ROSBackground.h"
 
 #include "private/ROSBackgroundImageTopicImpl.h"
 #include "private/ROSBackgroundH264ReceiverImpl.h"
