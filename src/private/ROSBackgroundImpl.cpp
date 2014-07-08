@@ -3,7 +3,7 @@
 using namespace bciinterface;
 
 ROSBackgroundImpl::ROSBackgroundImpl::ROSBackgroundImpl(unsigned int wwidth, unsigned int wheight, unsigned int iwidth, unsigned int iheight)
-: nh(), width(0), height(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
+: nh(), bg(0), width(0), height(0), wwidth(wwidth), wheight(wheight), iwidth(iwidth), iheight(iheight), close(false)
 {
 }
 
