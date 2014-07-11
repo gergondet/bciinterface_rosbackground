@@ -7,6 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
   ros_h264_streamer
 )
 
+include_directories(${catkin_INCLUDE_DIRS})
+link_directories(${catkin_LIBRARY_DIRS})
+
 find_package(Boost REQUIRED COMPONENTS filesystem system thread)
 
 include_directories(${Boost_INCLUDE_DIRS})
