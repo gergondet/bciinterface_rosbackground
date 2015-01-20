@@ -61,32 +61,41 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool use_oculus = false;
     if(argc > 1)
     {
-        std::stringstream ss;
-        ss << argv[1];
-        ss >> fullscreen;
+      std::stringstream ss;
+      ss << argv[1];
+      ss >> use_oculus;
     }
-    unsigned int width = 1680;
-    unsigned int height = 1050;
-    unsigned int iwidth = 1024;
-    unsigned int iheight = 768;
-    if(!fullscreen)
-    {
-        width = 640;
-        height = 480;
-        iwidth = 640;
-        iheight = 480;
-    }
+    unsigned int width = 640;
+    unsigned int height = 480;
+    unsigned int iwidth = 640;
+    unsigned int iheight = 480;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
+    if(use_oculus)
+    {
+      bciinterface->InitOculus();
+      width = bciinterface->GetWidth();
+      height = bciinterface->GetHeight();
+      iwidth = bciinterface->GetWidth();
+      iheight = bciinterface->GetHeight();
+    }
     ROSBackground * bg = new ROSBackground("camera/rgb/image_raw", width, height, iwidth, iheight);
     TestCameraSwitch tcs(*bg);
     bciinterface->SetBackground(bg);
     bciinterface->AddEventHandler(&tcs);
 
-    bciinterface->DisplayLoop(fullscreen);
+    if(use_oculus)
+    {
+      int cmd = -1;
+      bciinterface->OculusDisplayLoop(cmd);
+    }
+    else
+    {
+      bciinterface->DisplayLoop();
+    }
 
     delete bciinterface;
     delete bg;
