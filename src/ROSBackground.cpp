@@ -21,6 +21,9 @@ ROSBackground::ROSBackground(ros::NodeHandle & nh, const std::string & videonode
 
 ROSBackground::ROSBackground(ros_h264_streamer::H264Receiver::Config & conf, unsigned int wwidth, unsigned int wheight, unsigned int iwidth, unsigned int iheight)
 {
+  int argc = 0;
+  char * argv[] = {};
+  ros::init(argc, argv, "bci_interface_rosbg");
   m_impl = new ROSBackgroundH264ReceiverImpl(conf, wwidth, wheight, iwidth, iheight);
 }
 
